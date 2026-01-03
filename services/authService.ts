@@ -150,7 +150,15 @@ export const authService = {
     },
 
     changePassword: async (uid: number, oldPw: string, newPw: string): Promise<void> => {
-        // Implement password change endpoint in backend if needed
-        console.log("Password change requested - Endpoint not implemented in this demo yet.");
+        const res = await fetch(`${USER_API_URL}/${uid}/password`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw })
+        });
+
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.message || 'Failed to change password');
+        }
     }
 };
