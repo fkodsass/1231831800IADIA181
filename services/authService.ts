@@ -153,7 +153,7 @@ export const authService = {
         const res = await fetch(`${USER_API_URL}/${uid}/password`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw })
+            body: JSON.stringify({ newPassword: newPw })
         });
 
         if (!res.ok) {

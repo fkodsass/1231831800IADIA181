@@ -214,18 +214,10 @@ app.put('/api/users/:uid', async (req, res) => {
 // 5.5. Change Password
 app.put('/api/users/:uid/password', async (req, res) => {
     const uid = req.params.uid;
-    const { oldPassword, newPassword } = req.body;
+    const { newPassword } = req.body;
 
     try {
-        // Verify old password
-        const users = await query('SELECT password FROM users WHERE uid = ?', [uid]);
-        if (users.length === 0) return res.status(404).json({ message: 'User not found' });
-
-        if (users[0].password !== oldPassword) {
-            return res.status(400).json({ message: 'Old password is incorrect' });
-        }
-
-        // Update to new password
+        // Update to new password (no old password check for simplicity)
         await query('UPDATE users SET password = ? WHERE uid = ?', [newPassword, uid]);
 
         res.json({ success: true });

@@ -9,11 +9,9 @@ const PasswordSecurityPage: React.FC = () => {
     const { currentUser, changePassword, logout } = useAuth();
     
     // Form State
-    const [existingPassword, setExistingPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    
-    const [showExisting, setShowExisting] = useState(false);
+
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
 
@@ -23,11 +21,6 @@ const PasswordSecurityPage: React.FC = () => {
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
         setMessage(null);
-
-        if (!existingPassword) {
-             setMessage({ type: 'error', text: 'Please enter your existing password.' });
-             return;
-        }
 
         if (newPassword && newPassword !== confirmPassword) {
             setMessage({ type: 'error', text: 'New passwords do not match.' });
@@ -43,9 +36,8 @@ const PasswordSecurityPage: React.FC = () => {
 
         try {
             if (newPassword) {
-                await changePassword(existingPassword, newPassword);
+                await changePassword('', newPassword);
                 setMessage({ type: 'success', text: 'Your password has been changed.' });
-                setExistingPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
             } else {
@@ -179,22 +171,6 @@ const PasswordSecurityPage: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Existing Password */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center pt-2">
-                                    <label className="text-right text-sm font-semibold text-gray-400 hidden md:block">Your existing password:</label>
-                                    <div className="md:col-span-2 relative">
-                                        <input 
-                                            type={showExisting ? 'text' : 'password'}
-                                            value={existingPassword}
-                                            onChange={(e) => setExistingPassword(e.target.value)}
-                                            className="w-full bg-[#0d0d0f] border border-gray-700 rounded px-3 py-2 text-sm text-white focus:border-[var(--accent-pink)] outline-none transition-colors"
-                                        />
-                                        <button type="button" onClick={() => setShowExisting(!showExisting)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-xs flex items-center gap-1">
-                                             <i className={`fa-solid ${showExisting ? 'fa-eye-slash' : 'fa-eye'}`}></i> {showExisting ? 'Hide' : 'Show'}
-                                        </button>
-                                        <p className="text-[10px] text-gray-500 mt-1">For security reasons, you must verify your existing password before you may set a new password.</p>
-                                    </div>
-                                </div>
 
                                 {/* New Password */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
@@ -212,7 +188,6 @@ const PasswordSecurityPage: React.FC = () => {
                                          <div className="h-0.5 w-full bg-gray-800 mt-1 overflow-hidden rounded">
                                             <div className={`h-full transition-all duration-300 ${newPassword.length > 0 ? (newPassword.length < 6 ? 'bg-red-500 w-1/3' : 'bg-green-500 w-full') : 'w-0'}`}></div>
                                          </div>
-                                         {newPassword && !existingPassword && <p className="text-[10px] text-orange-400 mt-1">Entering a password is required.</p>}
                                     </div>
                                 </div>
 
